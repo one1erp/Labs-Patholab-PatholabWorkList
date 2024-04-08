@@ -1,0 +1,315 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9D8C5E45-ADAB-4670-B4CA-1B4E1E5D1897}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PatholabWorkList</RootNamespace>
+    <AssemblyName>PatholabWorkList</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\DLLS\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RegisterForComInterop>true</RegisterForComInterop>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework">
+      <HintPath>..\..\..\..\..\..\..\work\PatolabProj\DLLS\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Interop.LSSERVICEPROVIDERLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\..\..\..\Program Files (x86)\Thermo\Nautilus\Interop.LSSERVICEPROVIDERLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.121.2.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DLLS\Oracle.ManagedDataAccess.dll</HintPath>
+    </Reference>
+    <Reference Include="PacsDigital, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DLLS\PacsDigital.dll</HintPath>
+    </Reference>
+    <Reference Include="Patholab_Common, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DLLS\Patholab_Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Patholab_DAL_V1, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DLLS\Patholab_DAL_V1.dll</HintPath>
+    </Reference>
+    <Reference Include="Patholab_XmlService, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\Patholab_XmlService\bin\Debug\Patholab_XmlService.dll</HintPath>
+    </Reference>
+    <Reference Include="PortalAssuta, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DLLS\PortalAssuta.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="Telerik.WinControls.GridView, Version=2015.2.623.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DLLS\Telerik.WinControls.GridView.dll</HintPath>
+    </Reference>
+    <Reference Include="Telerik.WinControls.UI, Version=2015.2.623.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DLLS\BKP TELERIK\Telerik.WinControls.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="TelerikCommon, Version=2015.2.623.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DLLS\TelerikCommon.dll</HintPath>
+    </Reference>
+    <Reference Include="TelerikData, Version=2015.2.623.40, Culture=neutral, PublicKeyToken=5bb2a467cbec794e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\DLLS\TelerikData.dll</HintPath>
+    </Reference>
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="formFilter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="formFilter.Designer.cs">
+      <DependentUpon>formFilter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FunctionsForIcons.cs" />
+    <Compile Include="PatholabWorkListHost.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="PatholabWorkListHost.Designer.cs">
+      <DependentUpon>PatholabWorkListHost.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PatientRow.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="ReContainer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReContainer.Designer.cs">
+      <DependentUpon>ReContainer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TabManager.cs" />
+    <Compile Include="WpfPatholabWorkList.xaml.cs">
+      <DependentUpon>WpfPatholabWorkList.xaml</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="formFilter.resx">
+      <DependentUpon>formFilter.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PatholabWorkListHost.resx">
+      <DependentUpon>PatholabWorkListHost.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReContainer.resx">
+      <DependentUpon>ReContainer.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\PathologDiagnosis\PathologDiagnosis\PathologDiagnosis.csproj">
+      <Project>{36146fd2-bbe0-46ad-becf-4028471fd15f}</Project>
+      <Name>PathologDiagnosis</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\PathologResultEntry\PathologResultEntry\PathologResultEntry.csproj">
+      <Project>{2c27008e-5163-4f3a-803a-6cb85f1c77b0}</Project>
+      <Name>PathologResultEntry</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="WpfPatholabWorkList.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\black-square.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\checked-checkbox.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\secondInspection.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\white-square.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\black-square.png" />
+    <Resource Include="Images\checked-checkbox.png" />
+    <Resource Include="Images\white-square.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\portal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sectra.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\completeRequests%28BIG%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\completeRequests.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\extraDocument%28small%29s.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\extraDocuments.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\extraRequests%28BIG%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\extraRequests.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\multiple%28BIG%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\multiple.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\portal%28BIG%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\remarks%28BIG%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\remarks.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sectra%28BIG%29.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\advisor.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\extraRequestsTEMP.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\advisorFinish.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\advisorWait.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Filter.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="LSEXT">
+      <Guid>{FBC86965-B117-11D2-9B57-006008777507}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="LSExtensionWindowLib">
+      <Guid>{4C2C51C1-130B-4F41-9D7E-00F67528DB72}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\has_finish_colors.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\has_colors.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Scanned.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\extraMaterial.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fnishextraMaterial.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Image1.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\extraMaterial.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fnishextraMaterial.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\FinishRescan.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Rescan.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\clinicalDetailsIcon.png" />
+    <Resource Include="Resources\scannedReferenceIcon.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
