@@ -13,6 +13,7 @@ using LSExtensionWindowLib;
 using LSSERVICEPROVIDERLib;
 using Patholab_Common;
 using System.Diagnostics.Eventing.Reader;
+using Oracle.ManagedDataAccess.Client;
 
 namespace PatholabWorkList
 {
@@ -28,6 +29,7 @@ namespace PatholabWorkList
         private INautilusServiceProvider sp;
         private INautilusDBConnection _ntlsCon;
         private DataLayer dal = null;
+        private OracleConnection oraCon;
         private WpfPatholabWorkList workList;
         State _windowState;
         bool DEBUG = false;
@@ -82,7 +84,7 @@ namespace PatholabWorkList
 
             }
         }
-
+  
         void PatholabWorkList_Disposed(object sender, EventArgs e)
         {
             GC.Collect();

@@ -1,5 +1,4 @@
-﻿using HostUserControl;
-using LSExtensionWindowLib;
+﻿using LSExtensionWindowLib;
 using LSSERVICEPROVIDERLib;
 using Oracle.ManagedDataAccess.Client;
 using Patholab_Common;
@@ -9,14 +8,12 @@ using PathologResultEntry;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data.Entity;
 using System.Diagnostics;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -46,8 +43,7 @@ namespace PatholabWorkList
         private string loggedInUserName;
         private string loggedInUserFullName;
         private State _state;
-        private OracleConnection oraCon;
-
+        OracleConnection _oraCon;
 
         #endregion
 
@@ -63,7 +59,8 @@ namespace PatholabWorkList
             ntlsUser = _ntlsUser;
             ntlsCon = _ntlsCon;
             _state = _windowState;
-            oraCon = GetOracleConnection(ntlsCon);
+
+            _oraCon = _dal.GetOracleConnection(_ntlsCon);
 
             loggedInUser = Convert.ToInt64(ntlsUser.GetOperatorId());
             loggedInUserName = ntlsUser.GetOperatorName().Trim();
@@ -72,7 +69,11 @@ namespace PatholabWorkList
             loggedInUserFullName = q.FULL_NAME;
             init();
             Mouse.OverrideCursor = null;
+
         }
+
+
+
         public WpfPatholabWorkList()//for debug only
         {
             InitializeComponent();
@@ -381,7 +382,6 @@ namespace PatholabWorkList
 
             rowsCounter = 0;
 
-            buttonUnselectAll.Visibility = (currentListView == lv_my_cases ? Visibility.Collapsed : Visibility.Visible);
             buttonSelectAll.Visibility = (currentListView == lv_my_cases ? Visibility.Collapsed : Visibility.Visible);
 
             if (currentListView == lv_revision)
@@ -1023,7 +1023,6 @@ namespace PatholabWorkList
         private int numOfRowsM_list;
 
         List<PatientRow> OrganList = new List<PatientRow>();
-        private double _session_id;
         private int numOfRowsChecked;
 
         private void SaveTime(string key)
@@ -1044,74 +1043,57 @@ namespace PatholabWorkList
 
             var query = "select * from lims.PATHOLOG_WORKLIST";
 
-            using (OracleCommand cmd = new OracleCommand())
+            GeneralPR_list = dal.FetchDataFromDB(query, reader =>
             {
-                cmd.Connection = oraCon;
-                cmd.CommandText = query;
-
-                using (var reader = cmd.ExecuteReader())
+                return new PatientRow
                 {
-                    while (reader.Read())
-                    {
-                        PatientRow patient = MapRowToPatient(reader);
-                        GeneralPR_list.Add(patient);
-                    }
-                }
-
-            }
+                    sdgId = Convert.ToInt32(reader["SDG_ID"]),
+                    sdgName = reader["SDGNAME"] != DBNull.Value ? reader["SDGNAME"].ToString() : null,
+                    FullPtientName = reader["PTIENT_NAME"] != DBNull.Value ? reader["PTIENT_NAME"].ToString() : null,
+                    status = reader["SDGSTATUS"] != DBNull.Value ? reader["SDGSTATUS"].ToString() : null,
+                    ShouldDistribute = reader["U_WEEK_NBR"] != DBNull.Value && (Convert.ToInt32(reader["U_WEEK_NBR"]) == 907 || Convert.ToInt32(reader["U_WEEK_NBR"]) == 909 || Convert.ToInt32(reader["U_WEEK_NBR"]) == 908),
+                    Scanned_on = reader["SCANNED_ON"] != DBNull.Value ? Convert.ToDateTime(reader["SCANNED_ON"]) : (DateTime?)null,
+                    U_WEEK_NBR = reader["U_WEEK_NBR"] != DBNull.Value ? Convert.ToDecimal(reader["U_WEEK_NBR"]) : (decimal?)null,
+                    InConsult = reader["IS_ADVISOR"] != DBNull.Value && reader["IS_ADVISOR"].ToString().Equals("T") ? true : false,
+                    isDigit = reader["IS_DIGITAL"] != DBNull.Value ? reader["IS_DIGITAL"].ToString() : null,
+                    SentToConsultationIcon = reader["IS_ADVISOR"] != DBNull.Value && reader["IS_ADVISOR"].ToString().Equals("T") && reader["U_PATHOLOG"] != DBNull.Value && Convert.ToDecimal(reader["U_PATHOLOG"]) == loggedInUser ? true : false,
+                    FinishToConsultationIcon = reader["HAS_FINISH_ADVISE"] != DBNull.Value && reader["HAS_FINISH_ADVISE"].ToString().Equals("T") && reader["U_PATHOLOG"] != DBNull.Value && Convert.ToDecimal(reader["U_PATHOLOG"]) == loggedInUser ? true : false,
+                    PriorityNumber = reader["U_PRIORITY"] != DBNull.Value ? Convert.ToDecimal(reader["U_PRIORITY"]) : (decimal?)null,
+                    PriorityTxt = reader["PRIO_TXT"] != DBNull.Value ? reader["PRIO_TXT"].ToString() : null,
+                    PathologId = reader["U_PATHOLOG"] != DBNull.Value ? Convert.ToInt32(reader["U_PATHOLOG"]) : (int?)null,
+                    Patholog = reader["PATHOLOG_FULL_NAME"] != DBNull.Value ? reader["PATHOLOG_FULL_NAME"].ToString() : null,
+                    Date = reader["U_SEND_ON"] != DBNull.Value ? Convert.ToDateTime(reader["U_SEND_ON"]) : (DateTime?)null,
+                    PatholabNum = reader["U_PATHOLAB_NUMBER"] != DBNull.Value ? reader["U_PATHOLAB_NUMBER"].ToString() : null,
+                    ClinicalDiagnosis = reader["DIAGNOSIS"] != DBNull.Value ? reader["DIAGNOSIS"].ToString() : null,
+                    AllOrgans = reader["ORGANS"] != DBNull.Value ? reader["ORGANS"].ToString() : null,
+                    NumBlocks = reader["NUM_OF_BLOCKS"] != DBNull.Value ? Convert.ToInt32(reader["NUM_OF_BLOCKS"]) : (int?)null,
+                    Colors = reader["COLORS"] != DBNull.Value ? reader["COLORS"].ToString() : null,
+                    NumColors = reader["NUM_OF_COLORS"] != DBNull.Value ? Convert.ToInt32(reader["NUM_OF_COLORS"]) : (int?)null,
+                    hasRemarksIcon = reader["HAS_REMARKS"] != DBNull.Value && reader["HAS_REMARKS"].ToString().Equals("T") ? true : false,
+                    hasMultipleIcon = reader["HAS_MULTIPLE"] != DBNull.Value && reader["HAS_MULTIPLE"].ToString().Equals("T") ? true : false,
+                    hasSecondInspectionIcon = reader["HAS_SECOND_INSPECTION"] != DBNull.Value && reader["HAS_SECOND_INSPECTION"].ToString().Equals("T") ? true : false,
+                    hasExtraRequestsIcon = reader["HAS_RESCAN"] != DBNull.Value && reader["HAS_RESCAN"].ToString().Equals("T") ? true : false,
+                    hasFinishExtraRequestsIcon = reader["HAS_FINISH_RESCAN"] != DBNull.Value && reader["HAS_FINISH_RESCAN"].ToString().Equals("T") ? true : false,
+                    hasColorsIcon = reader["HAS_COLORS"] != DBNull.Value && reader["HAS_COLORS"].ToString().Equals("T") ? true : false,
+                    hasFinishColorsIcon = reader["HAS_FINISH_COLORS"] != DBNull.Value && reader["HAS_FINISH_COLORS"].ToString().Equals("T") ? true : false,
+                    GlassType = reader["U_GLASS_TYPE"] != DBNull.Value ? Convert.ToDecimal(reader["U_GLASS_TYPE"]) : (decimal?)null,
+                    Revision = reader["REVISION"] != DBNull.Value ? reader["REVISION"].ToString() : null,
+                    ADVISOROPERATOR = reader["ADVISOROPERATOR"] != DBNull.Value ? reader["ADVISOROPERATOR"].ToString() : null,
+                    hasSlidedsScannedIcon = reader["HAS_SLIDES_SCANED"] != DBNull.Value && reader["HAS_SLIDES_SCANED"].ToString().Equals("T") ? true : false,
+                    hasExtraMaterialIcon = reader["HAS_EXTRA_MATERIAL"] != DBNull.Value && reader["HAS_EXTRA_MATERIAL"].ToString().Equals("T") ? true : false,
+                    hasFinishExtraMaterialIcon = reader["HAS_FINISH_EXTRA_MATERIAL"] != DBNull.Value && reader["HAS_FINISH_EXTRA_MATERIAL"].ToString().Equals("T") ? true : false,
+                    RemarksRequest = reader["REMARKSREQUESTS"] != DBNull.Value ? reader["REMARKSREQUESTS"].ToString() : null,
+                    unscanned_slides_number = reader["UNSCANNED_SLIDES_NUMBER"] != DBNull.Value ? Convert.ToInt32(reader["UNSCANNED_SLIDES_NUMBER"]) : (int?)null,
+                    empty_blocks_number = reader["EMPTY_BLOCKS_NUMBER"] != DBNull.Value ? Convert.ToInt32(reader["EMPTY_BLOCKS_NUMBER"]) : (int?)null,
+                    HasAnyAttachdDocs = reader["HAS_ATTACHED_DOCS"] != DBNull.Value && reader["HAS_ATTACHED_DOCS"].ToString().Equals("T") ? true : false
+                };
+            });
 
             Logger.WriteLogFile($"End Load Data {GeneralPR_list.Count()} rows in list");
 
             AssigningDATA();
 
         }
-        private PatientRow MapRowToPatient(OracleDataReader reader)
-        {
-            return new PatientRow
-            {
-                sdgId = Convert.ToInt32(reader["SDG_ID"]),
-                sdgName = reader["SDGNAME"] != DBNull.Value ? reader["SDGNAME"].ToString() : null,
-                FullPtientName = reader["PTIENT_NAME"] != DBNull.Value ? reader["PTIENT_NAME"].ToString() : null,
-                status = reader["SDGSTATUS"] != DBNull.Value ? reader["SDGSTATUS"].ToString() : null,
-                ShouldDistribute = reader["U_WEEK_NBR"] != DBNull.Value && (Convert.ToInt32(reader["U_WEEK_NBR"]) == 907 || Convert.ToInt32(reader["U_WEEK_NBR"]) == 909 || Convert.ToInt32(reader["U_WEEK_NBR"]) == 908),
-                Scanned_on = reader["SCANNED_ON"] != DBNull.Value ? Convert.ToDateTime(reader["SCANNED_ON"]) : (DateTime?)null,
-                U_WEEK_NBR = reader["U_WEEK_NBR"] != DBNull.Value ? Convert.ToDecimal(reader["U_WEEK_NBR"]) : (decimal?)null,
-                InConsult = reader["IS_ADVISOR"] != DBNull.Value && reader["IS_ADVISOR"].ToString().Equals("T") ? true : false,
-                isDigit = reader["IS_DIGITAL"] != DBNull.Value ? reader["IS_DIGITAL"].ToString() : null,
-                SentToConsultationIcon = reader["IS_ADVISOR"] != DBNull.Value && reader["IS_ADVISOR"].ToString().Equals("T") && reader["U_PATHOLOG"] != DBNull.Value && Convert.ToDecimal(reader["U_PATHOLOG"]) == loggedInUser ? true : false,
-                FinishToConsultationIcon = reader["HAS_FINISH_ADVISE"] != DBNull.Value && reader["HAS_FINISH_ADVISE"].ToString().Equals("T") && reader["U_PATHOLOG"] != DBNull.Value && Convert.ToDecimal(reader["U_PATHOLOG"]) == loggedInUser ? true : false,
-                PriorityNumber = reader["U_PRIORITY"] != DBNull.Value ? Convert.ToDecimal(reader["U_PRIORITY"]) : (decimal?)null,
-                PriorityTxt = reader["PRIO_TXT"] != DBNull.Value ? reader["PRIO_TXT"].ToString() : null,
-                PathologId = reader["U_PATHOLOG"] != DBNull.Value ? Convert.ToInt32(reader["U_PATHOLOG"]) : (int?)null,
-                Patholog = reader["PATHOLOG_FULL_NAME"] != DBNull.Value ? reader["PATHOLOG_FULL_NAME"].ToString() : null,
-                Date = reader["U_SEND_ON"] != DBNull.Value ? Convert.ToDateTime(reader["U_SEND_ON"]) : (DateTime?)null,
-                PatholabNum = reader["U_PATHOLAB_NUMBER"] != DBNull.Value ? reader["U_PATHOLAB_NUMBER"].ToString() : null,
-                ClinicalDiagnosis = reader["DIAGNOSIS"] != DBNull.Value ? reader["DIAGNOSIS"].ToString() : null,
-                AllOrgans = reader["ORGANS"] != DBNull.Value ? reader["ORGANS"].ToString() : null,
-                NumBlocks = reader["NUM_OF_BLOCKS"] != DBNull.Value ? Convert.ToInt32(reader["NUM_OF_BLOCKS"]) : (int?)null,
-                Colors = reader["COLORS"] != DBNull.Value ? reader["COLORS"].ToString() : null,
-                NumColors = reader["NUM_OF_COLORS"] != DBNull.Value ? Convert.ToInt32(reader["NUM_OF_COLORS"]) : (int?)null,
-                hasRemarksIcon = reader["HAS_REMARKS"] != DBNull.Value && reader["HAS_REMARKS"].ToString().Equals("T") ? true : false,
-                hasMultipleIcon = reader["HAS_MULTIPLE"] != DBNull.Value && reader["HAS_MULTIPLE"].ToString().Equals("T") ? true : false,
-                hasSecondInspectionIcon = reader["HAS_SECOND_INSPECTION"] != DBNull.Value && reader["HAS_SECOND_INSPECTION"].ToString().Equals("T") ? true : false,
-                hasExtraRequestsIcon = reader["HAS_RESCAN"] != DBNull.Value && reader["HAS_RESCAN"].ToString().Equals("T") ? true : false,
-                hasFinishExtraRequestsIcon = reader["HAS_FINISH_RESCAN"] != DBNull.Value && reader["HAS_FINISH_RESCAN"].ToString().Equals("T") ? true : false,
-                hasColorsIcon = reader["HAS_COLORS"] != DBNull.Value && reader["HAS_COLORS"].ToString().Equals("T") ? true : false,
-                hasFinishColorsIcon = reader["HAS_FINISH_COLORS"] != DBNull.Value && reader["HAS_FINISH_COLORS"].ToString().Equals("T") ? true : false,
-                GlassType = reader["U_GLASS_TYPE"] != DBNull.Value ? Convert.ToDecimal(reader["U_GLASS_TYPE"]) : (decimal?)null,
-                Revision = reader["REVISION"] != DBNull.Value ? reader["REVISION"].ToString() : null,
-                ADVISOROPERATOR = reader["ADVISOROPERATOR"] != DBNull.Value ? reader["ADVISOROPERATOR"].ToString() : null,
-                hasSlidedsScannedIcon = reader["HAS_SLIDES_SCANED"] != DBNull.Value && reader["HAS_SLIDES_SCANED"].ToString().Equals("T") ? true : false,
-                hasExtraMaterialIcon = reader["HAS_EXTRA_MATERIAL"] != DBNull.Value && reader["HAS_EXTRA_MATERIAL"].ToString().Equals("T") ? true : false,
-                hasFinishExtraMaterialIcon = reader["HAS_FINISH_EXTRA_MATERIAL"] != DBNull.Value && reader["HAS_FINISH_EXTRA_MATERIAL"].ToString().Equals("T") ? true : false,
-                RemarksRequest = reader["REMARKSREQUESTS"] != DBNull.Value ? reader["REMARKSREQUESTS"].ToString() : null,
-                unscanned_slides_number = reader["UNSCANNED_SLIDES_NUMBER"] != DBNull.Value ? Convert.ToInt32(reader["UNSCANNED_SLIDES_NUMBER"]) : (int?)null,
-                empty_blocks_number = reader["EMPTY_BLOCKS_NUMBER"] != DBNull.Value ? Convert.ToInt32(reader["EMPTY_BLOCKS_NUMBER"]) : (int?)null,
-                HasAnyAttachdDocs = reader["HAS_ATTACHED_DOCS"] != DBNull.Value && reader["HAS_ATTACHED_DOCS"].ToString().Equals("T") ? true : false
-            };
-        }
-
-
         private void AssigningDATA()
         {
 
@@ -1454,106 +1436,7 @@ namespace PatholabWorkList
             }
 
         }
-        public OracleConnection GetOracleConnection(INautilusDBConnection ntlsCon)
-        {
 
-            OracleConnection connection = null;
-
-            if (ntlsCon != null)
-            {
-                String roleCommand;
-                try
-                {
-
-
-                    //var C = ntlsCon.GetServerIsProxy();
-                    //var C2 = ntlsCon.GetServerName();
-                    //var C4 = ntlsCon.GetServerType();
-
-                    //var C6 = ntlsCon.GetServerExtra();
-
-                    //var C8 = ntlsCon.GetPassword();
-                    //var C9 = ntlsCon.GetLimsUserPwd();
-                    //var C10 = ntlsCon.GetServerIsProxy();
-
-                    string _connectionString = ntlsCon.GetADOConnectionString();
-
-                    var splited = _connectionString.Split(';');
-
-                    var cs = "";
-
-                    for (int i = 1; i < splited.Count(); i++)
-                    {
-                        cs += splited[i] + ';';
-                    }
-
-                    var username = ntlsCon.GetUsername();
-                    if (string.IsNullOrEmpty(username))
-                    {
-                        var serverDetails = ntlsCon.GetServerDetails();
-                        cs = "User Id=/;Data Source=" + serverDetails + ";";
-                    }
-
-
-                    //Create the connection
-                    connection = new OracleConnection(cs);
-
-                    // Open the connection
-                    connection.Open();
-
-                    // Get lims user password
-                    string limsUserPassword = ntlsCon.GetLimsUserPwd();
-
-                    // Set role lims user
-                    if (limsUserPassword == "")
-                    {
-                        // LIMS_USER is not password protected
-                        roleCommand = "set role lims_user";
-                    }
-                    else
-                    {
-                        // LIMS_USER is password protected.
-                        roleCommand = "set role lims_user identified by " + limsUserPassword;
-                    }
-
-                    // set the Oracle user for this connecition
-                    OracleCommand command = new OracleCommand(roleCommand, connection);
-
-                    // Try/Catch block
-                    try
-                    {
-                        // Execute the command
-                        command.ExecuteNonQuery();
-                    }
-                    catch (Exception f)
-                    {
-                        // Throw the exception
-                        throw new Exception("Inconsistent role Security : " + f.Message);
-                    }
-
-                    // Get the session id
-                    _session_id = ntlsCon.GetSessionId();
-
-                    // Connect to the same session
-                    string sSql = string.Format("call lims.lims_env.connect_same_session({0})", _session_id);
-
-                    // Build the command
-                    command = new OracleCommand(sSql, connection);
-
-                    // Execute the command
-                    command.ExecuteNonQuery();
-
-                }
-                catch (Exception e)
-                {
-                    // Throw the exception
-                    throw e;
-                }
-            }
-
-            return connection;
-
-        }
 
         private void tabControl1_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
         {
@@ -1580,6 +1463,9 @@ namespace PatholabWorkList
         }
 
         private List<PatientRow> selectedPatientRows = new List<PatientRow>();
+        private double _session_id;
+
+        public static string callingClass { get; private set; }
 
         private void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -1768,7 +1654,24 @@ namespace PatholabWorkList
 
 
     }
+    public class WordCountConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is string content)
+            {
+                string[] words = content.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                return words.Length > 6;
+            }
 
+            return false;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
 }
 
