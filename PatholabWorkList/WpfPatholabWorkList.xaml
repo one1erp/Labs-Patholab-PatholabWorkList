@@ -170,12 +170,7 @@
               Height="Auto" RenderTransformOrigin="1.211,0.464" 
               BorderThickness="2,0" Width="auto" VerticalAlignment="Top" />
 
-                    <Button x:Name="buttonDistribute" 
-              Style="{StaticResource CustomButton}"
-              Content="הפצה" 
-              Click="buttonDistribute_Click"
-              Height="Auto" RenderTransformOrigin="1.211,0.464" 
-              BorderThickness="2,0" Width="auto" VerticalAlignment="Top" />
+
 
                     <Button x:Name="buttonAdvise" 
               Style="{StaticResource CustomButton}"
@@ -232,6 +227,13 @@
               Style="{StaticResource CustomButton}"
               Content="Refresh" 
               Click="buttonRefresh_Click"
+              Height="Auto" RenderTransformOrigin="1.211,0.464" 
+              BorderThickness="2,0" Width="auto" VerticalAlignment="Top" />
+
+                    <Button x:Name="buttonDistribute" 
+              Style="{StaticResource CustomButton}"
+              Content="הפצה" 
+              Click="buttonDistribute_Click"
               Height="Auto" RenderTransformOrigin="1.211,0.464" 
               BorderThickness="2,0" Width="auto" VerticalAlignment="Top" />
 

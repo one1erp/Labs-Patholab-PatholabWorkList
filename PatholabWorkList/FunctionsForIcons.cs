@@ -35,8 +35,10 @@ namespace PatholabWorkList
             AdvisorIcon(patient.SentToConsultationIcon, patient.FinishToConsultationIcon);
             ScannedIcon(patient.hasSlidedsScannedIcon);
             ExtraMaterialIcon(patient.hasExtraMaterialIcon,patient.hasFinishExtraMaterialIcon);
-            ScannedReferenceIcon(patient.HasAnyAttachdDocs);
-            ClinicalDetailsIcon(patient.ClinicalDiagnosis);
+
+            //Liat asked to cancel.
+            //ScannedReferenceIcon(patient.HasAnyAttachdDocs);
+            //ClinicalDetailsIcon(patient.ClinicalDiagnosis);
 
             return iconsList;
         }
@@ -49,7 +51,7 @@ namespace PatholabWorkList
                 {
                     System.Windows.Controls.Image img = new System.Windows.Controls.Image();
 
-                    img.Source = loadBitmap(PatholabWorkList.Properties.Resources.extraDocument);
+                    img.Source = loadBitmap(PatholabWorkList.Properties.Resources.clinicalDetailsIcon);
                     img.ToolTip = new ToolTip() { Content = "הוזנו פרטים קליניים" };
                     ToolTipService.SetInitialShowDelay(img, 700);
 

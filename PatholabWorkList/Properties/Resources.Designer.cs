@@ -113,6 +113,16 @@ namespace PatholabWorkList.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap clinicalDetailsIcon {
+            get {
+                object obj = ResourceManager.GetObject("clinicalDetailsIcon", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap completeRequests_BIG_ {
             get {
                 object obj = ResourceManager.GetObject("completeRequests_BIG_", resourceCulture);

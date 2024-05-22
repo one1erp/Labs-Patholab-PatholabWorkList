@@ -282,6 +282,7 @@ namespace PatholabWorkList
             buttonBank.Visibility = Visibility.Visible;
             buttonCancelAssociation.Visibility = Visibility.Collapsed;
             buttonMovToPTG.Visibility = Visibility.Collapsed;
+            
 
             PTGList.Visibility = Visibility.Collapsed;
             ORGANList.Visibility = Visibility.Collapsed;
@@ -365,9 +366,8 @@ namespace PatholabWorkList
             checkboxChecked.Clear();
             AssigningDATA();
             buttonDistribute.Visibility = (currentListView == lv_revision || currentListView == lv_Distribution) ? Visibility.Visible : Visibility.Collapsed;
-
+            buttonSelectSpecificRows.Visibility = (currentListView == lv_my_cases ) ? Visibility.Collapsed : Visibility.Visible;
             buttonAdvise.Visibility = _state == State.Manager ? buttonDistribute.Visibility : Visibility.Collapsed;
-
 
             if (_state == State.Manager && currentListView == lv_manager)
             {
@@ -741,12 +741,13 @@ namespace PatholabWorkList
         }
 
         private void ReloadData(string name)
-        {
+        {            
             _uiManager.ClearData();
 
             //Reload data from DB
             LoadData();
             SaveTime(name);
+            ChangeRowsNum(name);
         }
 
         #region Sort methods
@@ -1103,10 +1104,10 @@ namespace PatholabWorkList
             //בנק מקרים
 
             //debug mode
-            //AllCasesList = GeneralPR_list.Where(x => x.PathologId == null && x.unscanned_slides_number == 0 && x.ClinicalDiagnosis != string.Empty).OrderBy(patient => patient.Date).ToList();
+            AllCasesList = GeneralPR_list.Where(x => x.PathologId == null).OrderBy(patient => patient.Date).ToList();
 
             //real mode 
-            AllCasesList = GeneralPR_list.Where(x => x.PathologId == null && x.unscanned_slides_number == 0 && x.HasAnyAttachdDocs == true && x.ClinicalDiagnosis != string.Empty).OrderBy(patient => patient.Date).ToList();
+            //AllCasesList = GeneralPR_list.Where(x => x.PathologId == null && x.unscanned_slides_number == 0 && x.HasAnyAttachdDocs == true && x.ClinicalDiagnosis != string.Empty).OrderBy(patient => patient.Date).ToList();
             numOfRowsAC_list = AllCasesList.Count;
             //פתולוג משויך
 
@@ -1540,6 +1541,8 @@ namespace PatholabWorkList
         private void ChangeRowsNum(string name)
         {
             string s = " מקרים ";
+
+            numOfRowsAC_list = currentListView.Items.Count;
 
             switch (name)
             {
