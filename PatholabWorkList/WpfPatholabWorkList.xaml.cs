@@ -368,6 +368,7 @@ namespace PatholabWorkList
             buttonDistribute.Visibility = (currentListView == lv_revision || currentListView == lv_Distribution) ? Visibility.Visible : Visibility.Collapsed;
             buttonSelectSpecificRows.Visibility = (currentListView == lv_my_cases ) ? Visibility.Collapsed : Visibility.Visible;
             buttonAdvise.Visibility = _state == State.Manager ? buttonDistribute.Visibility : Visibility.Collapsed;
+            buttonUnselectAll.Visibility = _state == State.Patholog && currentListView == lv_my_cases ? Visibility.Collapsed: Visibility.Visible;
 
             if (_state == State.Manager && currentListView == lv_manager)
             {
@@ -1104,10 +1105,10 @@ namespace PatholabWorkList
             //בנק מקרים
 
             //debug mode
-            AllCasesList = GeneralPR_list.Where(x => x.PathologId == null).OrderBy(patient => patient.Date).ToList();
+            //AllCasesList = GeneralPR_list.Where(x => x.PathologId == null).OrderBy(patient => patient.Date).ToList();
 
             //real mode 
-            //AllCasesList = GeneralPR_list.Where(x => x.PathologId == null && x.unscanned_slides_number == 0 && x.HasAnyAttachdDocs == true && x.ClinicalDiagnosis != string.Empty).OrderBy(patient => patient.Date).ToList();
+            AllCasesList = GeneralPR_list.Where(x => x.PathologId == null && x.unscanned_slides_number == 0 && x.HasAnyAttachdDocs == true && x.ClinicalDiagnosis != string.Empty).OrderBy(patient => patient.Date).ToList();
             numOfRowsAC_list = AllCasesList.Count;
             //פתולוג משויך
 

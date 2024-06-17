@@ -33,8 +33,6 @@ namespace PatholabWorkList
         private WpfPatholabWorkList workList;
         State _windowState;
         bool DEBUG = false;
-        bool isManager = false;
-        bool isBank = false;
 
         #endregion
 
@@ -101,10 +99,9 @@ namespace PatholabWorkList
                     dal.Close();
                     dal = null;
                 }
-                if (_ntlsSite != null) _ntlsSite = null;
-
-                //    if (connection != null) connection.Close();
-
+                if (_ntlsSite != null)
+                _ntlsSite.CloseWindow();
+               
                 this.Dispose();
                 workList.CloseQuery();
                 return true;
@@ -156,7 +153,6 @@ namespace PatholabWorkList
 
             if (parameters.ToLower() == "manager")
             {
-                isManager = true;
                 _windowState = State.Manager;
 
             }
@@ -164,7 +160,6 @@ namespace PatholabWorkList
             {
                 if (parameters.ToLower() == "bank")
                 {
-                    isBank = true;
                     _windowState = State.Bank;
 
 
